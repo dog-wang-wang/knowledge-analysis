@@ -199,7 +199,7 @@ def construct_complete(KG, K, index_list):
 
     if need_random:
         need = K - P.number_of_triples()
-        triple_to_add = random.sample(KG.triples(), k = need)
+        triple_to_add = random.sample(list(KG.triples()), k = need)
         for triple in triple_to_add:
             P.add_triple(triple)
     return P

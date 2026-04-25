@@ -34,7 +34,7 @@ fun initProperties() {
 fun createOutputDir(host: String, project: String) {
     println("$host 开始创建 $project 项目的相关分析文档输出目录")
     // 创建输出的根目录
-    val root = mkdir("$host 分析器的分析结果")
+    val root = mkdir(skillHost)
     // 创建json输出目录，给 ai 看
     mkdir("json", root.absolutePath)
     // 创建html输出目录，给人看
