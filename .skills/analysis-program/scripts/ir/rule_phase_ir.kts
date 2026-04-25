@@ -121,13 +121,13 @@ fun Any?.toJson(): String = when (this) {
 
 val projectRoot = System.getProperty("user.dir") ?: "."
 val props = Properties().apply {
-    val configFile = File(projectRoot, ".claude/skills/analysis-program/scripts/config.properties")
+    val configFile = File(projectRoot, ".claude/.skills/analysis-program/scripts/config.properties")
     if (configFile.exists()) configFile.reader(Charsets.UTF_8).use { load(it) }
 }
 
 val analysisRootName = props.getProperty("struct.root", "哆啦A梦分析器的分析结果")
 val irOutputDir = File(File(projectRoot, analysisRootName), "ir")
-val detektJar = File(projectRoot, ".claude/skills/analysis-program/scripts/ir/detekt-cli.jar")
+val detektJar = File(projectRoot, ".claude/.skills/analysis-program/scripts/ir/detekt-cli.jar")
 
 fun runCommand(vararg command: String): String = try {
     ProcessBuilder(*command).redirectErrorStream(true).start().inputStream.bufferedReader().readText()

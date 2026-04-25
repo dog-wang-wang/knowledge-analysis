@@ -16,17 +16,17 @@
 
 ```bash
 # 创建目录
-mkdir -p ./.claude/skills/analysis-program/scripts/ir
+mkdir -p ./.skills/analysis-program/scripts/ir
 
 # 下载 Detekt CLI (Kotlin)
-curl -L https://github.com/detekt/detekt/releases/download/v1.23.1/detekt-cli-1.23.1-all.jar -o ./.claude/skills/analysis-program/scripts/ir/detekt-cli.jar
+curl -L https://github.com/detekt/detekt/releases/download/v1.23.1/detekt-cli-1.23.1-all.jar -o ./.claude/.skills/analysis-program/scripts/ir/detekt-cli.jar
 
 # 下载 Checkstyle (Java)
-curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.3/checkstyle-10.12.3-all.jar -o ./.claude/skills/analysis-program/scripts/ir/checkstyle.jar
+curl -L https://github.com/checkstyle/checkstyle/releases/download/checkstyle-10.12.3/checkstyle-10.12.3-all.jar -o ./.claude/.skills/analysis-program/scripts/ir/checkstyle.jar
 ```
 
 ## 1. 执行分析
 环境确认无误后，在项目根目录下执行：
 ```bash
-kotlin ./.claude/skills/analysis-program/scripts/ir/rule_phase_ir.kts
+kotlin ./.skills/analysis-program/scripts/ir/rule_phase_ir.kts
 ```

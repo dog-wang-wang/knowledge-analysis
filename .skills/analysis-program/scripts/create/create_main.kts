@@ -21,7 +21,7 @@ safeRun {
 // 初始化配置
 fun initProperties() {
     // todo: 可更改项
-    val props = Properties().apply { load(File(".claude/skills/analysis-program/scripts/config.properties").reader(Charsets.UTF_8)) }
+    val props = Properties().apply { load(File(".skills/analysis-program/scripts/config.properties").reader(Charsets.UTF_8)) }
     skillHost = props.getProperty("skill.host")
     projectName = props.getProperty("project.name")
     analysisRootName = props.getProperty("struct.root")
