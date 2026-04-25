@@ -19,9 +19,13 @@ class KnowledgeGraph(object):
     def __init__(self):
         """A KG is a set of entities E, a set of relationships R,
         and a set of triples E x R x E."""
+        # 实体集合
         self.entities_ = set()
+        # 实体关系集合
         self.relationships_ = set()
+        # 三元组集合
         self.triples_ = {}
+        # 三元组数量
         self.number_of_triples_ = 0
 
         # Map entities to numeric IDs
@@ -122,6 +126,7 @@ class KnowledgeGraph(object):
         """
         return entity in self.triples_
 
+    # 判断有无三元组
     def has_triple(self, triple):
         """
         :param triple: (e1, r, e2)
@@ -458,7 +463,7 @@ class Freebase(KnowledgeGraph):
                 if self.number_of_triples() == head:
                     return
 
-
+# 继承Knowledge
 class YAGO(KnowledgeGraph):
 
     def __init__(self, rdf_gz='yagoFacts.gz', query_dir='final/', mid_dir='by-mid/'):
@@ -493,12 +498,13 @@ class YAGO(KnowledgeGraph):
         return self.mid_dir_
     
     def update_user(self, user_number):
+        # 更新用户目录
         USER_DIR = os.path.join(self.YAGO_DATA_DIR_query, 'user' + str(user_number))
         self.user_dir = USER_DIR
         self.query_dir_ = os.path.join(USER_DIR, self.initial_query_dir)
         self.mid_dir_ = os.path.join(os.path.join(self.YAGO_DATA_DIR_query, 'user' + str(user_number)), self.initial_mid_dir)
 
-        
+        # 检查目录存在
         CHECK_FOLDER = os.path.isdir(USER_DIR)
 
         # If folder doesn't exist, then create it.
@@ -635,7 +641,7 @@ class MetaQA(KnowledgeGraph):
 
         self.query_dir_ = os.path.join(self.METAQA_DATA_DIR_query, query_dir)
         self.mid_dir_ = os.path.join(self.METAQA_DATA_DIR_query, mid_dir)
-
+        # 这玩意是个map，key是知识图谱元素中的关系，value是词
         self.relation_translate = {'has_tags': ['movie_to_tags', 'tag_to_movie'], 'starred_actors': ['movie_to_actor', 'actor_to_movie'], 'directed_by': ['movie_to_director', 'director_to_movie'], 'written_by': ['movie_to_writer', 'writer_to_movie'], 'release_year': ['movie_to_year'], 'has_imdb_votes': ['movie_to_imdbvotes'], 
                       'has_imdb_rating': ['movie_to_imdbrating'], 'in_language': ['movie_to_language'], 'has_genre': ['movie_to_genre']}
 
@@ -674,19 +680,25 @@ class MetaQA(KnowledgeGraph):
     def entity_names(self):
         return { entity : entity for entity in self.entities() }
 
+    # 加载知识图谱的内容
     def load(self, head=None, strip=True):
+        # 以只读的形式打开文件
         with open(self.rdf_gz_, 'r', encoding='utf-8') as f:
+            # 遍历每一行读取成为一个数组吧
             for line in f:
                 fact = tuple(line.rstrip().split('|'))
+                # 分别表示数组中的三个元素：实体-关系-实体
                 e1, r, e2 = fact
 
                 if not e1 or not e2:
                     continue
-
+                # 判断某个关系的valueList的长度是否为1
                 if len(self.relation_translate[r]) == 1:
+                    # 长度为一时构建三元组，把关系替换为map中的首个value并添加到三元组集合中
                     triple = (e1, self.relation_translate[r][0], e2)
                     self.add_triple(triple)
                 else:
+                    # 不为一的时候构建两个三元组，分别提取map中的两个value并添加到三元组集合中
                     triple1 = (e1, self.relation_translate[r][0], e2)
                     self.add_triple(triple1)
                     triple2 = (e2, self.relation_translate[r][1], e1)

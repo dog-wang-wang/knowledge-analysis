@@ -49,7 +49,7 @@ KG_MAPPING = {
     'MetaQA': MetaQA(),
 }
 
-# 可用方法
+# 摘要算法
 METHODS = {
     'apex': SummaryMethod(APEX, 'APEX'),
     'apex-n': SummaryMethod(APEX_N, 'APEX-N'),
@@ -156,24 +156,26 @@ def main():
         print('警告：将覆盖已有文件，是否继续？')
         pdb.set_trace()
 
+    # 获取知识图谱
     KG = KG_MAPPING[args.kg]
+    # 从输入参数中提取摘要方法
     summary_methods = [METHODS[name] for name in args.method]
-
-    # 加载知识图谱
     logging.info('正在加载 {}'.format(KG.name()))
+    # 加载知识图谱
     KG.load()
     logging.info('加载完成 {}'.format(KG.name()))
 
-    # 计算摘要大小 K
+    # 计算摘要大小 K： 三元组数量乘以百分比然后取整
     K = int(args.percent_triples * KG.number_of_triples())
     logging.info('K = {}'.format(K))
 
-    # 模拟用户
+    # 模拟用户（默认是0到2的随机数）
     for user in range(args.start_user, args.start_user + args.n_users):
         logging.info('---模拟用户 {}---'.format(user))
+        # 更新图的用户
         KG.update_user(user)
         logging.basicConfig(filename=KG.user_dir + '/log.log')
-
+        # 根据数据集选择
         if args.kg == 'Freebase':
             topics = random.sample(KG.topics(), k=args.n_topics)
 
@@ -186,9 +188,11 @@ def main():
             args.save_queries = False
             args.load_queries = True
             query_log = []
-
+            # 查询数量里取随机数
             for i in range(args.n_queries):
+                # 从final目录里面找到q对应的json并且添加日志
                 with open(KG.query_dir() + "q" + str(i) + ".json", "r") as f:
+                    # 添加查询日志（可以不看）
                     query_log.append(json.load(f))
 
             logging.info('---已加载 {} 条查询日志---'.format(len(query_log)))
@@ -213,7 +217,7 @@ def main():
                     whether_save=args.save_queries)
 
                 logging.info('---生成了 {} 条查询日志---'.format(len(query_log)))
-
+        # 保存查询的话就把日志输出出来
         if args.save_queries:
             logging.info('---正在保存查询---')
             for i in range(len(query_log)):
