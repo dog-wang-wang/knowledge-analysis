@@ -1,10 +1,4 @@
-# APEX<sup>2</sup>: Adaptive and Extreme Summarization for Personalized Knowledge Graphs
-![Overview](Apex-Legends.jpg)
-Figure credit: (one of) my favorite video game [APEX Legends](https://en.wikipedia.org/wiki/Apex_Legends). This project is dedicated to the memory of my undergraduate years.
-
-------------------------
-**[Paper (full arXiv version)](./KDD2025_APEX2_arXiv.pdf)** | **[Paper (ACM version)](https://dl.acm.org/doi/abs/10.1145/3690624.3709213)** | **[Poster](./KDD_2025_Poster.pdf)** | **[Video Summary](https://www.youtube.com/watch?v=FtcNqk7rX40)**
-
+主要目的是学一下这个项目怎么用才建的这个仓库
 ## file structure
     - README.md (this file)
     - .gitignore
