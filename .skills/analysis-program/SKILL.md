@@ -35,6 +35,8 @@ description: 项目分析与理解
 执行时参考[rule_phase_create_output.md](references/rule_phase_create_output.md)
 ## 3.2 Phase 2 → 文件扫描 
 执行时参考[rule_phase_scan.md](references/rule_phase_scan.md)
+## 3.3 Phase 3 -> 文件分析
+执行时参考[rule_phase_analysis](references/rule_phase_analysis_file.md)
 ## 3.3 Phase 3 → 项目功能分析
 扫描所有代码，分析项目的功能模块到一个文档中并保存至项目的根目录下
 ## 3.4 Phase 4 → 项目原理 + 技术介绍
