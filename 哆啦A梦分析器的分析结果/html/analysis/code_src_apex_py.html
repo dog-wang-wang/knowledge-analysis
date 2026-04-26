@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/src/apex.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #e74c3c; }
+        .algo-box { background: #fdf2e9; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #e74c3c; }
+        .algo-name { font-weight: bold; color: #d35400; font-size: 1.3em; margin-bottom: 10px; }
+        .method-list { list-style: none; padding: 0; }
+        .method-list li { background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 5px; border-left: 3px solid #3498db; }
+        .method-name { font-weight: bold; color: #2980b9; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.9em; line-height: 1.6; margin: 15px 0; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; border-bottom: none; }
+        .term-item { margin-bottom: 12px; padding-left: 15px; border-left: 3px solid white; }
+        .term-item strong { display: block; margin-bottom: 5px; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html">📄 base.py</a>
+            <a href="code_src_apex_py.html" class="active">📄 apex.py</a>
+            <a href="code_src_user_py.html">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/src/apex.py</h1>
+                <p>APEX和APEX-N摘要算法的核心实现文件。这是项目的核心算法模块，实现了自适应个性化知识图谱摘要。</p>
+                
+                <h2>核心算法</h2>
+                
+                <div class="algo-box">
+                    <div class="algo-name">APEX - 基础版摘要算法</div>
+                    <p>基于热衰减的增量式知识图谱摘要算法。</p>
+                    <div class="method-list">
+                        <li><strong>输入：</strong>KG, K, query_log, gamma, diameter, alpha</li>
+                        <li><strong>输出：</strong>F1分数列表、更新耗时列表</li>
+                        <li><strong>原理：</strong>为每个三元组计算热度值H = e1 × (r + smoothing) × e2，然后选择top-K个三元组构成摘要</li>
+                    </div>
+                </div>
+                
+                <div class="algo-box">
+                    <div class="algo-name">APEX-N - 改进版摘要算法</div>
+                    <p>基于热扩散的增量式摘要算法，更适合处理大规模图。</p>
+                    <div class="method-list">
+                        <li><strong>输入：</strong>KG, K, query_log, gamma, diameter, alpha</li>
+                        <li><strong>输出：</strong>F1分数列表、更新耗时列表</li>
+                        <li><strong>原理：</strong>使用热扩散计算实体热度，按热度排序选择top-K实体，再构建摘要</li>
+                    </div>
+                </div>
+
+                <h2>辅助函数</h2>
+                <div class="method-list">
+                    <li>
+                        <span class="method-name">Heat_Diffuse(heat, KG, query, d, csr_indirect_matrices)</span>
+                        <p>热扩散函数，将查询的热量扩散到相邻实体。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">heat_decay_array(h, gamma)</span>
+                        <p>热衰减函数，按gamma系数衰减热量。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">binary_find(index_list, changed_index, H)</span>
+                        <p>二分查找，在排序列表中查找指定索引。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">binary_insert(index_list, changed_index, H)</span>
+                        <p>二分插入，保持列表有序。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">incremental_sort(index_list, changed_index_list, H_old, H_new)</span>
+                        <p>增量排序，高效更新有序列表。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">construct_naive(KG, K, topic_eids)</span>
+                        <p>朴素方式构建摘要。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">construct_complete(KG, K, index_list)</span>
+                        <p>完整方式构建摘要。</p>
+                    </li>
+                </div>
+
+                <h2>Summary类</h2>
+                <div class="code-block">
+class Summary(KnowledgeGraph):
+    - fill(triples, k): 填充三元组到摘要
+    - add_entity(topic_mid): 添加实体相关三元组
+    - add_random_triple(): 随机添加一个三元组</div>
+
+                <h2>调用链关系</h2>
+                <div class="code-block">
+main.py
+  └─> apex.py (APEX, APEX_N)
+        ├─> base.py (KnowledgeGraph, Summary)
+        └─> metrics.py (total_query_log_metrics, average_query_log_metrics)</div>
+
+                <div class="term-box">
+                    <h3>📚 术语解释（通俗版）</h3>
+                    <div class="term-item">
+                        <strong>摘要 (Summary)</strong>
+                        知识图谱的一个子图，包含K个最重要的三元组，用来做快速查询。
+                    </div>
+                    <div class="term-item">
+                        <strong>热度值 (Heat)</strong>
+                        表示三元组重要性的数值，热度越高说明越可能是用户关心的。
+                    </div>
+                    <div class="term-item">
+                        <strong>gamma 衰减因子</strong>
+                        控制历史热量衰减的参数，值越小历史数据忘记得越快。
+                    </div>
+                    <div class="term-item">
+                        <strong>增量更新</span>
+                        <strong>只更新变化的部分，而不是重新计算全部，提高效率。</strong>
+                    </div>
+                </div>
+
+                <div class="summary">
+                    <strong>大白话总结：</strong>apex.py是APEX系统的核心发动机。它通过分析用户的查询历史，计算出哪些三元组最重要，然后挑选top-K个组成一个"小图谱"（摘要）。这样用户再查询时，可以先在小图谱里找答案，速度快很多。APEX-N是改进版，处理大图更高效。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

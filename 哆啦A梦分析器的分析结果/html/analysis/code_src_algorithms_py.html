@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/src/algorithms.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db; }
+        .func-box { background: #ebf5fb; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #3498db; }
+        .func-name { font-weight: bold; color: #2874a6; font-size: 1.2em; margin-bottom: 10px; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; }
+        .term-item { margin-bottom: 12px; padding-left: 15px; border-left: 3px solid white; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html">📄 base.py</a>
+            <a href="code_src_apex_py.html">📄 apex.py</a>
+            <a href="code_src_user_py.html">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html" class="active">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/src/algorithms.py</h1>
+                <p>基础算法模块，包含查询向量构建和随机游走算法。</p>
+                
+                <h2>核心函数</h2>
+                <div class="func-box">
+                    <div class="func-name">query_vector(KG, query_log)</div>
+                    <p>将查询日志转换为实体向量。向量的每个元素对应一个实体，值为该实体被查询的次数。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">random_walk_with_restart(M, x, c, power)</div>
+                    <p>带重启的随机游走算法，用于计算实体的重要性分数。公式：(I - M)^-1 = I + M + M² + M³ ...</p>
+                </div>
+
+                <div class="term-box">
+                    <h3>📚 术语解释</h3>
+                    <div class="term-item"><strong>随机游走 (Random Walk)</strong>从某节点出发，随机跳到邻居节点，重复多次。</div>
+                    <div class="term-item"><strong>重启概率 (Restart Probability)</strong>每次跳转时回到起点的概率。</div>
+                    <div class="term-item"><strong>Taylor展开</strong>用多项式近似计算矩阵逆。</div>
+                </div>
+
+                <div class="summary">
+                    <strong>大白话总结：</strong>algorithms.py提供基础图算法工具，帮助计算实体的重要性（"热度"）。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

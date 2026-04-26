@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX项目功能模块分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; padding: 30px; }
+        .container { max-width: 1400px; margin: 0 auto; background: white; border-radius: 20px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); overflow: hidden; }
+        header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 50px; text-align: center; }
+        h1 { font-size: 2.5em; margin-bottom: 15px; }
+        .subtitle { font-size: 1.3em; opacity: 0.9; }
+        .content { padding: 50px; }
+        .section { margin-bottom: 50px; }
+        .section h2 { color: #2c3e50; font-size: 2em; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid #667eea; }
+        .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; margin: 30px 0; }
+        .module-card { background: #f8f9fa; border-radius: 15px; padding: 30px; transition: all 0.3s; border: 2px solid transparent; }
+        .module-card:hover { transform: translateY(-5px); border-color: #667eea; box-shadow: 0 15px 40px rgba(0,0,0,0.15); }
+        .module-title { color: #667eea; font-size: 1.4em; font-weight: bold; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .module-title .icon { background: #667eea; color: white; width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .module-desc { color: #555; line-height: 1.7; margin-bottom: 15px; }
+        .module-funcs { background: white; border-radius: 10px; padding: 15px; }
+        .func-item { padding: 8px 0; border-bottom: 1px solid #eee; color: #333; }
+        .func-item:last-child { border-bottom: none; }
+        .func-name { color: #667eea; font-weight: bold; }
+        .stats-box { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin: 30px 0; }
+        .stat-card { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 25px; border-radius: 15px; text-align: center; }
+        .stat-num { font-size: 2.5em; font-weight: bold; margin-bottom: 5px; }
+        .stat-label { opacity: 0.9; }
+        .file-tree { background: #2c3e50; color: #ecf0f1; padding: 25px; border-radius: 15px; font-family: monospace; }
+        .file-tree .folder { color: #f39c12; }
+        .file-tree .file { color: #3498db; }
+        .file-tree .py { color: #27ae60; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 APEX项目功能模块分析</h1>
+            <p class="subtitle">功能模块划分与详细说明</p>
+        </header>
+        <div class="content">
+            <!-- 项目统计 -->
+            <div class="section">
+                <h2>📈 项目统计</h2>
+                <div class="stats-box">
+                    <div class="stat-card">
+                        <div class="stat-num">9</div>
+                        <div class="stat-label">源代码文件</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">4</div>
+                        <div class="stat-label">知识图谱实现</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">2</div>
+                        <div class="stat-label">摘要算法</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-num">3</div>
+                        <div class="stat-label">支持的数据集</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 功能模块 -->
+            <div class="section">
+                <h2>📦 核心功能模块</h2>
+                <div class="module-grid">
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">📄</span>
+                            main.py - 程序入口
+                        </div>
+                        <div class="module-desc">项目的启动入口，负责命令行参数解析、流程控制和结果输出。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">main()</span> - 程序主入口</div>
+                            <div class="func-item"><span class="func-name">parse_args()</span> - 命令行参数解析</div>
+                            <div class="func-item"><span class="func-name">answer_queries_in_log()</span> - 执行查询并评估</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">🔗</span>
+                            base.py - 知识图谱
+                        </div>
+                        <div class="module-desc">知识图谱的抽象基类和具体实现，支持YAGO、DBpedia、MetaQA、Freebase四种数据集。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">KnowledgeGraph</span> - 抽象基类</div>
+                            <div class="func-item"><span class="func-name">YAGO</span> - YAGO知识图谱</div>
+                            <div class="func-item"><span class="func-name">DBpedia</span> - DBpedia知识图谱</div>
+                            <div class="func-item"><span class="func-name">MetaQA</span> - 电影问答知识图谱</div>
+                            <div class="func-item"><span class="func-name">Freebase</span> - Freebase知识图谱</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">⚡</span>
+                            apex.py - 摘要算法
+                        </div>
+                        <div class="module-desc">APEX和APEX-N摘要算法的核心实现，包含热扩散和增量更新逻辑。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">APEX()</span> - 基础摘要算法</div>
+                            <div class="func-item"><span class="func-name">APEX_N()</span> - 改进摘要算法</div>
+                            <div class="func-item"><span class="func-name">Heat_Diffuse()</span> - 热扩散函数</div>
+                            <div class="func-item"><span class="func-name">incremental_sort()</span> - 增量排序</div>
+                            <div class="func-item"><span class="func-name">Summary</span> - 摘要类</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">👤</span>
+                            user.py - 用户模拟
+                        </div>
+                        <div class="module-desc">模拟用户查询行为，生成测试用的查询日志。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">query_log_by_mids()</span> - 按实体生成查询</div>
+                            <div class="func-item"><span class="func-name">query_log_by_topics()</span> - 按主题生成查询</div>
+                            <div class="func-item"><span class="func-name">generate_queries_by_mid()</span> - 生成查询</div>
+                            <div class="func-item"><span class="func-name">randomize_log()</span> - 随机化查询</div>
+                            <div class="func-item"><span class="func-name">reuse()</span> - 计算重用率</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">❓</span>
+                            query.py - 查询处理
+                        </div>
+                        <div class="module-desc">查询的加载、保存和答案生成模块，处理WebQSP格式查询。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">answer_query()</span> - 查询答案</div>
+                            <div class="func-item"><span class="func-name">generate_query()</span> - 生成合成查询</div>
+                            <div class="func-item"><span class="func-name">load_question()</span> - 加载查询</div>
+                            <div class="func-item"><span class="func-name">save_question()</span> - 保存查询</div>
+                            <div class="func-item"><span class="func-name">load_questions_from_dir()</span> - 批量加载</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">📏</span>
+                            metrics.py - 评估指标
+                        </div>
+                        <div class="module-desc">评估摘要质量的指标计算模块，计算F1分数、精确率、召回率。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">query_metrics()</span> - 单查询指标</div>
+                            <div class="func-item"><span class="func-name">total_query_log_metrics()</span> - 累积指标</div>
+                            <div class="func-item"><span class="func-name">average_query_log_metrics()</span> - 平均指标</div>
+                            <div class="func-item"><span class="func-name">f1_score()</span> - F1分数</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">🔢</span>
+                            algorithms.py - 基础算法
+                        </div>
+                        <div class="module-desc">基础图算法，包括查询向量构建和随机游走。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">query_vector()</span> - 查询向量</div>
+                            <div class="func-item"><span class="func-name">random_walk_with_restart()</span> - 带重启随机游走</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">📁</span>
+                            path.py - 配置模块
+                        </div>
+                        <div class="module-desc">数据路径配置文件，定义数据集的相对路径。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">YAGO_DATA_DIR</span> - YAGO路径</div>
+                            <div class="func-item"><span class="func-name">DBPEDIA_DATA_DIR</span> - DBpedia路径</div>
+                            <div class="func-item"><span class="func-name">METAQA_DATA_DIR</span> - MetaQA路径</div>
+                            <div class="func-item"><span class="func-name">ENCODING</span> - 编码格式</div>
+                        </div>
+                    </div>
+                    
+                    <div class="module-card">
+                        <div class="module-title">
+                            <span class="icon">📊</span>
+                            heap.py - 堆结构
+                        </div>
+                        <div class="module-desc">堆数据结构实现，用于贪心选择最有价值的三元组。</div>
+                        <div class="module-funcs">
+                            <div class="func-item"><span class="func-name">Heap</span> - 堆类</div>
+                            <div class="func-item"><span class="func-name">Triple</span> - 三元组封装</div>
+                            <div class="func-item"><span class="func-name">update()</span> - 更新堆</div>
+                            <div class="func-item"><span class="func-name">pop()</span> - 弹出最大元素</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文件结构 -->
+            <div class="section">
+                <h2>📂 文件结构</h2>
+                <div class="file-tree">
+<span class="folder">APEX/</span>
+├── <span class="folder">code/</span>
+│   ├── main.py                    <span class="py"># 程序入口</span>
+│   └── <span class="folder">src/</span>
+│       ├── __init__.py
+│       ├── base.py               <span class="py"># 知识图谱基类</span>
+│       ├── apex.py                <span class="py"># 摘要算法</span>
+│       ├── user.py               <span class="py"># 用户模拟</span>
+│       ├── query.py               <span class="py"># 查询处理</span>
+│       ├── metrics.py            <span class="py"># 评估指标</span>
+│       ├── algorithms.py          <span class="py"># 基础算法</span>
+│       ├── path.py               <span class="py"># 路径配置</span>
+│       └── heap.py               <span class="py"># 堆结构</span>
+└── <span class="folder">PKG_EXP/</span>
+    ├── <span class="folder">MetaQA/</span>            <span class="py"># 电影问答数据集</span>
+    ├── <span class="folder">DBpedia/</span>           <span class="py"># 百科数据集（需下载）</span>
+    └── <span class="folder">YAGO/</span>              <span class="py"># YAGO数据集（需下载）</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

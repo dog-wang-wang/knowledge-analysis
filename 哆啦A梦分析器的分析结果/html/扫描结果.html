@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>APEX项目 - 项目分析入口</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        .content {
+            padding: 40px;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+        .section h2 {
+            color: #333;
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        .module-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .module-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            cursor: pointer;
+        }
+        .module-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border-color: #667eea;
+        }
+        .module-card h3 {
+            color: #667eea;
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
+        .module-card p {
+            color: #666;
+            line-height: 1.6;
+        }
+        .call-chain {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+        .step-content {
+            flex: 1;
+        }
+        .step-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .step-desc {
+            color: #666;
+            font-size: 0.9em;
+        }
+        .arrow {
+            text-align: center;
+            font-size: 1.5em;
+            color: #667eea;
+        }
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .tech-item {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9em;
+        }
+        .graph-container {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 20px;
+        }
+        .file-node {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin: 5px;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .file-node:hover {
+            background: #667eea;
+            color: white;
+        }
+        .file-group {
+            margin-bottom: 20px;
+        }
+        .file-group h4 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📚 APEX知识图谱摘要系统</h1>
+            <p class="subtitle">项目结构分析与调用链总览</p>
+        </header>
+        
+        <div class="content">
+            <!-- 项目简介 -->
+            <div class="section">
+                <h2>🎯 项目简介</h2>
+                <div class="call-chain">
+                    <p>APEX是一个<strong>自适应个性化知识图谱摘要系统</strong>（Adaptive and Extreme Summarization for Personalized Knowledge Graphs），用于根据用户查询日志动态生成知识图谱的紧凑摘要。系统通过分析用户的查询模式，自动选择最重要的三元组来构建摘要图，使得后续查询能够在有限空间中获得更高的准确率。</p>
+                    <br>
+                    <p>该项目实现了两种摘要算法：<strong>APEX</strong>和<strong>APEX-N</strong>，并支持多种知识图谱数据集（MetaQA、DBpedia、YAGO）。</p>
+                </div>
+            </div>
+
+            <!-- 技术栈 -->
+            <div class="section">
+                <h2>🛠️ 技术栈</h2>
+                <div class="tech-stack">
+                    <span class="tech-item">Python 3</span>
+                    <span class="tech-item">NumPy</span>
+                    <span class="tech-item">SciPy</span>
+                    <span class="tech-item">tqdm</span>
+                    <span class="tech-item">知识图谱</span>
+                    <span class="tech-item">随机游走算法</span>
+                    <span class="tech-item">CSR矩阵</span>
+                </div>
+            </div>
+
+            <!-- 核心模块 -->
+            <div class="section">
+                <h2>📦 核心模块</h2>
+                <div class="module-list">
+                    <div class="module-card" onclick="location.href='analysis/code_main_py.html'">
+                        <h3>📄 code/main.py</h3>
+                        <p>项目入口文件，负责参数解析、知识图谱加载、用户模拟、摘要算法执行和结果评估</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_base_py.html'">
+                        <h3>📄 code/src/base.py</h3>
+                        <p>知识图谱基类和具体实现（YAGO、DBpedia、MetaQA、Freebase），包含三元组管理、CSR矩阵构建等核心功能</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_apex_py.html'">
+                        <h3>📄 code/src/apex.py</h3>
+                        <p>APEX和APEX-N摘要算法实现，包含热扩散、增量排序、摘要构建等核心逻辑</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_user_py.html'">
+                        <h3>📄 code/src/user.py</h3>
+                        <p>用户查询日志生成模块，根据主题实体生成模拟查询日志</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_query_py.html'">
+                        <h3>📄 code/src/query.py</h3>
+                        <p>查询加载、保存和答案生成模块，处理WebQSP格式的查询</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_metrics_py.html'">
+                        <h3>📄 code/src/metrics.py</h3>
+                        <p>评估指标模块，计算F1分数、精确率、召回率</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_algorithms_py.html'">
+                        <h3>📄 code/src/algorithms.py</h3>
+                        <p>基础算法模块，包含查询向量构建和随机游走算法</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_path_py.html'">
+                        <h3>📄 code/src/path.py</h3>
+                        <p>数据路径配置文件，定义各数据集的相对路径</p>
+                    </div>
+                    <div class="module-card" onclick="location.href='analysis/code_src_heap_py.html'">
+                        <h3>📄 code/src/heap.py</h3>
+                        <p>堆结构实现，用于贪心选择最重要的三元组</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 调用链 -->
+            <div class="section">
+                <h2>🔗 项目调用链</h2>
+                <div class="call-chain">
+                    <div class="step">
+                        <span class="step-number">1</span>
+                        <div class="step-content">
+                            <div class="step-title">main.py - main()</div>
+                            <div class="step-desc">程序入口，解析命令行参数，选择知识图谱和摘要方法</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">2</span>
+                        <div class="step-content">
+                            <div class="step-title">base.py - KG.load()</div>
+                            <div class="step-desc">加载选定的知识图谱数据集（YAGO/DBpedia/MetaQA），解析三元组数据</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">3</span>
+                        <div class="step-content">
+                            <div class="step-title">user.py - query_log_by_mids()</div>
+                            <div class="step-desc">根据主题实体生成用户查询日志</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">4</span>
+                        <div class="step-content">
+                            <div class="step-title">apex.py - APEX() / APEX_N()</div>
+                            <div class="step-desc">执行摘要算法，基于查询日志构建知识图谱摘要</div>
+                        </div>
+                    </div>
+                    <div class="arrow">↓</div>
+                    <div class="step">
+                        <span class="step-number">5</span>
+                        <div class="step-content">
+                            <div class="step-title">metrics.py - average_query_log_metrics()</div>
+                            <div class="step-desc">评估摘要质量，计算F1分数、精确率、召回率</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 文件关系图 -->
+            <div class="section">
+                <h2>🗂️ 文件依赖关系</h2>
+                <div class="graph-container">
+                    <div class="file-group">
+                        <h4>直接依赖 main.py 的文件：</h4>
+                        <div>
+                            <span class="file-node">src/base.py</span>
+                            <span class="file-node">src/user.py</span>
+                            <span class="file-node">src/apex.py</span>
+                        </div>
+                    </div>
+                    <div class="file-group">
+                        <h4>base.py 依赖的文件：</h4>
+                        <div>
+                            <span class="file-node">src/algorithms.py</span>
+                            <span class="file-node">src/path.py</span>
+                        </div>
+                    </div>
+                    <div class="file-group">
+                        <h4>apex.py 依赖的文件：</h4>
+                        <div>
+                            <span class="file-node">src/base.py</span>
+                            <span class="file-node">src/metrics.py</span>
+                        </div>
+                    </div>
+                    <div class="file-group">
+                        <h4>user.py 依赖的文件：</h4>
+                        <div>
+                            <span class="file-node">src/query.py</span>
+                        </div>
+                    </div>
+                    <div class="file-group">
+                        <h4>metrics.py 依赖的文件：</h4>
+                        <div>
+                            <span class="file-node">src/query.py</span>
+                        </div>
+                    </div>
+                    <div class="file-group">
+                        <h4>无依赖的独立文件：</h4>
+                        <div>
+                            <span class="file-node">src/path.py</span>
+                            <span class="file-node">src/heap.py</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

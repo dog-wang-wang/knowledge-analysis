@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/src/metrics.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #f39c12; }
+        .func-box { background: #fef9e7; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #f39c12; }
+        .func-name { font-weight: bold; color: #d68910; font-size: 1.2em; margin-bottom: 10px; }
+        .method-list { list-style: none; padding: 0; }
+        .method-list li { background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 5px; border-left: 3px solid #3498db; }
+        .method-name { font-weight: bold; color: #2980b9; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; }
+        .term-item { margin-bottom: 12px; padding-left: 15px; border-left: 3px solid white; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html">📄 base.py</a>
+            <a href="code_src_apex_py.html">📄 apex.py</a>
+            <a href="code_src_user_py.html">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html" class="active">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/src/metrics.py</h1>
+                <p>评估指标模块，计算摘要质量的F1分数、精确率和召回率。</p>
+                
+                <h2>核心函数</h2>
+                <div class="func-box">
+                    <div class="func-name">query_metrics(S, query)</div>
+                    <p>计算单个查询在摘要上的评估指标。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">total_query_log_metrics(S, query_log)</div>
+                    <p>对整个查询日志计算累积的评估指标（TP/FP/FN合并计算）。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">average_query_log_metrics(S, query_log)</div>
+                    <p>对整个查询日志计算平均评估指标（每个查询单独计算后取平均）。</p>
+                </div>
+
+                <h2>基础函数</h2>
+                <div class="method-list">
+                    <li><span class="method-name">precision(tp, fp, fn)</span> - 计算精确率</li>
+                    <li><span class="method-name">recall(tp, fp, fn)</span> - 计算召回率</li>
+                    <li><span class="method-name">f1_score(tp, fp, fn)</span> - 计算F1分数</li>
+                </div>
+
+                <div class="term-box">
+                    <h3>📚 术语解释</h3>
+                    <div class="term-item"><strong>True Positive (TP)</strong>摘要正确返回的答案数量。</div>
+                    <div class="term-item"><strong>False Positive (FP)</strong>摘要错误返回的答案数量。</div>
+                    <div class="term-item"><strong>False Negative (FN)</strong>摘要遗漏的正确答案数量。</div>
+                    <div class="term-item"><strong>F1分数</strong>精确率和召回率的调和平均。</div>
+                </div>
+
+                <div class="summary">
+                    <strong>大白话总结：</strong>metrics.py是"裁判"，它评判摘要做得好不好。通过对比正确答案和摘要返回的答案，计算分数。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

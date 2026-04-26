@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/src/base.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db; }
+        h3 { color: #2980b9; margin: 20px 0 10px; }
+        .class-box { background: #e8f6f3; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #1abc9c; }
+        .class-name { font-weight: bold; color: #16a085; font-size: 1.3em; margin-bottom: 10px; }
+        .method-list { list-style: none; padding: 0; }
+        .method-list li { background: white; padding: 12px 15px; margin: 8px 0; border-radius: 5px; border-left: 3px solid #3498db; }
+        .method-name { font-weight: bold; color: #2980b9; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.9em; line-height: 1.6; margin: 15px 0; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; border-bottom: none; }
+        .term-item { margin-bottom: 12px; padding-left: 15px; border-left: 3px solid white; }
+        .term-item strong { display: block; margin-bottom: 5px; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html" class="active">📄 base.py</a>
+            <a href="code_src_apex_py.html">📄 apex.py</a>
+            <a href="code_src_user_py.html">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/src/base.py</h1>
+                <p>知识图谱基类和具体实现模块，包含YAGO、DBpedia、MetaQA、Freebase四种知识图谱的实现。该文件是整个系统的核心数据管理模块。</p>
+                
+                <h2>类和继承关系</h2>
+                <div class="class-box">
+                    <div class="class-name">KnowledgeGraph - 基础抽象类</div>
+                    <p>所有知识图谱的基类，提供通用的三元组管理接口。</p>
+                    <h3>核心属性：</h3>
+                    <ul class="method-list">
+                        <li><span class="method-name">entities_</span> - 实体集合</li>
+                        <li><span class="method-name">relationships_</span> - 关系集合</li>
+                        <li><span class="method-name">triples_</span> - 三元组字典 {e1: {r: {e2}}}</li>
+                        <li><span class="method-name">entity_id_ / id_entity_</span> - 实体与ID的映射</li>
+                        <li><span class="method-name">csr_matrix_</span> - CSR稀疏矩阵（ adjacency matrix）</li>
+                    </ul>
+                </div>
+                
+                <div class="class-box">
+                    <div class="class-name">YAGO - YAGO知识图谱实现</div>
+                    <p>继承自KnowledgeGraph，处理YAGO数据集格式。</p>
+                </div>
+                
+                <div class="class-box">
+                    <div class="class-name">DBpedia - DBpedia知识图谱实现</div>
+                    <p>继承自KnowledgeGraph，处理DBpedia数据集格式。</p>
+                </div>
+                
+                <div class="class-box">
+                    <div class="class-name">MetaQA - MetaQA知识图谱实现</div>
+                    <p>继承自KnowledgeGraph，处理MetaQA电影问答数据集。</p>
+                    <p><strong>特色：</strong>包含关系映射表，将原始关系转换为双向关系。</p>
+                </div>
+                
+                <h2>核心方法</h2>
+                <div class="method-list">
+                    <li>
+                        <span class="method-name">add_triple(triple)</span>
+                        <p>添加三元组到知识图谱，自动维护实体ID和关系ID的映射。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">csr_matrix()</span>
+                        <p>构建CSR稀疏矩阵，用于高效的图算法计算。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">csr_matrix_indirect()</span>
+                        <p>构建无向图的CSR矩阵（邻接矩阵+转置）。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">calc_csr_matrix_indirect_heat()</span>
+                        <p>构建用于热扩散的列随机矩阵。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">load(head=None)</span>
+                        <p>加载知识图谱数据，从文件读取三元组。</p>
+                    </li>
+                    <li>
+                        <span class="method-name">model_user_pref(query_log)</span>
+                        <p>基于查询日志建模用户偏好，计算实体和三元组的热度值。</p>
+                    </li>
+                </div>
+
+                <h2>调用链关系</h2>
+                <div class="code-block">
+main.py
+  └─> base.py (KG.load, KG.update_user)
+        ├─> algorithms.py (query_vector, random_walk_with_restart)
+        └─> path.py (数据路径配置)</div>
+
+                <div class="term-box">
+                    <h3>📚 术语解释（通俗版）</h3>
+                    <div class="term-item">
+                        <strong>三元组 (Triple)</strong>
+                        表示知识图谱中的一条边，格式为(头实体, 关系, 尾实体)。���如��张三-朋友-李四。
+                    </div>
+                    <div class="term-item">
+                        <strong>CSR矩阵 (Compressed Sparse Row)</strong>
+                        一种稀疏矩阵存储格式，用三个数组存储非零元素，节省内存。像邻接表的升级版。
+                    </div>
+                    <div class="term-item">
+                        <strong>热扩散 (Heat Diffusion)</strong>
+                        一种图上的传播算法，类似热量在金属中传导，用于计算实体的重要性。
+                    </div>
+                    <div class="term-item">
+                        <strong>随机游走 (Random Walk)</strong>
+                        从一个节点随机跳到相邻节点的过程，用于分析图结构。
+                    </div>
+                </div>
+
+                <div class="summary">
+                    <strong>大白话总结：</strong>base.py是整个系统的心脏，它管理所有的知识图谱数据。它把原始的三元组数据变成计算机可以高效处理的矩阵形式，并提供查询和更新的接口。不同的知识图谱（YAGO、DBpedia、MetaQA）有不同的数据格式，但都抽象成了统一的接口。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

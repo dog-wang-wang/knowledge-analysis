@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/src/heap.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #e67e22; }
+        .class-box { background: #fdf2e9; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #e67e22; }
+        .class-name { font-weight: bold; color: #d35400; font-size: 1.2em; margin-bottom: 10px; }
+        .method-list { list-style: none; padding: 0; }
+        .method-list li { background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 5px; border-left: 3px solid #3498db; }
+        .method-name { font-weight: bold; color: #2980b9; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; }
+        .term-item { margin-bottom: 12px; padding-left: 15px; border-left: 3px solid white; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html">📄 base.py</a>
+            <a href="code_src_apex_py.html">📄 apex.py</a>
+            <a href="code_src_user_py.html">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html" class="active">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/src/heap.py</h1>
+                <p>堆结构实现，用于贪心选择最有价值的三元组。</p>
+                
+                <h2>Heap 类</h2>
+                <div class="class-box">
+                    <div class="class-name">Triple - 内部类</div>
+                    <p>封装三元组及其边际价值。</p>
+                </div>
+                
+                <h2>核心方法</h2>
+                <div class="method-list">
+                    <li><span class="method-name">__init__(KG)</span> - 根据KG中的三元���初始化堆</li>
+                    <li><span class="method-name">pop()</span> - 弹出价值最大的三元组</li>
+                    <li><span class="method-name">update(S, sample_size)</span> - 更新堆中的边际价值</li>
+                    <li><span class="method-name">_lazy_greedy(S, triples)</span> - 懒惰贪心算法</li>
+                </div>
+
+                <div class="term-box">
+                    <h3>📚 术语解释</h3>
+                    <div class="term-item"><strong>堆 (Heap)</strong>一种数据结构，能快速找到最大/最小元素。</div>
+                    <div class="term-item"><strong>边际价值</strong>加入该三元组后带来的额外价值。</div>
+                </div>
+
+                <div class="summary">
+                    <strong>大白话总结：</strong>heap.py提供了高效的"择优"工具，能快速从所有三元组中挑出最有价值的K个。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/main.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #3498db; }
+        .func-box { background: #ecf0f1; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #3498db; }
+        .func-name { font-weight: bold; color: #2980b9; font-size: 1.2em; margin-bottom: 10px; }
+        .param-table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+        .param-table th, .param-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .param-table th { background: #3498db; color: white; }
+        .param-table tr:nth-child(even) { background: #f9f9f9; }
+        .code-block { background: #2c3e50; color: #ecf0f1; padding: 20px; border-radius: 8px; overflow-x: auto; font-family: 'Monaco', 'Menlo', monospace; font-size: 0.9em; line-height: 1.6; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; border-bottom: none; }
+        .term-item { margin-bottom: 10px; padding-left: 15px; border-left: 3px solid white; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html">📄 base.py</a>
+            <a href="code_src_apex_py.html">📄 apex.py</a>
+            <a href="code_src_user_py.html">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/main.py</h1>
+                <p>项目主入口文件，负责程序的整体流程控制，包括参数解析、知识图谱加载、用户模拟、摘要算法执行和结果评估。</p>
+                
+                <h2>主要功能</h2>
+                <div class="func-box">
+                    <div class="func-name">main() - 程序入口函数</div>
+                    <p>程序的入口点，协调整个程序的运行流程。</p>
+                    <table class="param-table">
+                        <tr><th>参数</th><th>说明</th></tr>
+                        <tr><td>args</td><td>命令行解析的参数对象</td></tr>
+                        <tr><td>KG</td><td>知识图谱对象</td></tr>
+                        <tr><td>query_log</td><td>用户查询日志</td></tr>
+                        <tr><td>summary_methods</td><td>使用的摘要方法列表</td></tr>
+                    </table>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">parse_args() - 参数解析</div>
+                    <p>解析命令行参数，支持自定义知识图谱、查询数量、摘要方法等。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">answer_queries_in_log() - 查询执行与评估</div>
+                    <p>执行查询日志中的查询并评估摘要方法的性能。</p>
+                </div>
+
+                <h2>核心数据结构</h2>
+                <div class="code-block">
+# 知识图谱映射表
+KG_MAPPING = {
+    'YAGO': YAGO(...),
+    'Freebase': Freebase(...),
+    'DBpedia': DBPedia(...),
+    'MetaQA': MetaQA(...),
+}
+
+# 摘要算法映射表
+METHODS = {
+    'apex': SummaryMethod(APEX, 'APEX'),
+    'apex-n': SummaryMethod(APEX_N, 'APEX-N'),
+}

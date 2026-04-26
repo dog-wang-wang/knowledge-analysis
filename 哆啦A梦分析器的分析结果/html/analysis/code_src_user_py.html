@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>code/src/user.py - 文件分析</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f5f5f5; }
+        .container { display: flex; min-height: 100vh; }
+        .sidebar { width: 280px; background: #2c3e50; color: white; padding: 20px; position: fixed; height: 100vh; overflow-y: auto; }
+        .sidebar h3 { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #34495e; }
+        .sidebar a { display: block; color: #ecf0f1; padding: 10px 15px; text-decoration: none; border-radius: 5px; margin-bottom: 5px; transition: all 0.3s; }
+        .sidebar a:hover, .sidebar a.active { background: #3498db; }
+        .main { flex: 1; margin-left: 280px; padding: 30px; }
+        .content-wrapper { max-width: 1200px; background: white; border-radius: 10px; padding: 40px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #2c3e50; margin-bottom: 20px; font-size: 2em; }
+        h2 { color: #34495e; margin: 30px 0 15px; padding-bottom: 10px; border-bottom: 2px solid #27ae60; }
+        .func-box { background: #e8f8f5; border-radius: 8px; padding: 20px; margin: 15px 0; border-left: 4px solid #27ae60; }
+        .func-name { font-weight: bold; color: #1e8449; font-size: 1.2em; margin-bottom: 10px; }
+        .method-list { list-style: none; padding: 0; }
+        .method-list li { background: #f8f9fa; padding: 12px 15px; margin: 8px 0; border-radius: 5px; border-left: 3px solid #3498db; }
+        .method-name { font-weight: bold; color: #2980b9; }
+        .term-box { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 8px; margin-top: 30px; }
+        .term-box h3 { color: white; margin-bottom: 15px; border-bottom: none; }
+        .term-item { margin-bottom: 12px; padding-left: 15px; border-left: 3px solid white; }
+        .summary { background: #fff3cd; padding: 20px; border-radius: 8px; margin-top: 20px; border-left: 4px solid #ffc107; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h3>📁 文件导航</h3>
+            <a href="code_main_py.html">📄 main.py</a>
+            <a href="code_src_base_py.html">📄 base.py</a>
+            <a href="code_src_apex_py.html">📄 apex.py</a>
+            <a href="code_src_user_py.html" class="active">📄 user.py</a>
+            <a href="code_src_query_py.html">📄 query.py</a>
+            <a href="code_src_metrics_py.html">📄 metrics.py</a>
+            <a href="code_src_algorithms_py.html">📄 algorithms.py</a>
+            <a href="code_src_path_py.html">📄 path.py</a>
+            <a href="code_src_heap_py.html">📄 heap.py</a>
+            <a href="../扫描结果.html" style="margin-top:30px;background:#27ae60;">🏠 返回入口</a>
+        </div>
+        <div class="main">
+            <div class="content-wrapper">
+                <h1>📄 code/src/user.py</h1>
+                <p>用户查询日志生成模块，根据主题实体和查询模式生成模拟的用户查询日志。</p>
+                
+                <h2>核心函数</h2>
+                <div class="func-box">
+                    <div class="func-name">query_log_by_mids(KG, topic_mids, n_queries_in_log, ...)</div>
+                    <p>根据指定的主题实体MID生成查询日志。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">query_log_by_topics(KG, topics, n_mids_per_topic, n_queries_in_log, ...)</div>
+                    <p>根据高层主题生成查询日志。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">generate_queries_by_mid(KG, topic_mid, n_mid_queries, start_qid)</div>
+                    <p>为指定的主题实体生成多个查询。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">generate_queries_by_topic(KG, topic, n_topic_queries, n_topic_mids)</div>
+                    <p>为指定主题生成查询。</p>
+                </div>
+                
+                <div class="func-box">
+                    <div class="func-name">randomize_log(KG, query_log, random_query_prob, shuffle)</div>
+                    <p>随机化查询日志，可以添加随机查询或打乱顺序。</p>
+                </div>
+
+                <h2>辅助统计函数</h2>
+                <div class="method-list">
+                    <li><span class="method-name">reuse(query_log)</span> - 计算查询日志的重用率</li>
+                    <li><span class="method-name">entity_counts(query_log)</span> - 统计每个主题实体的查询次数</li>
+                    <li><span class="method-name">predicate_counts(query_log)</span> - 统计每个关系的查询次数</li>
+                </div>
+
+                <h2>调用链</h2>
+                <div class="func-box">
+                    user.py (query_log_by_mids)<br>
+                      └─> query.py (generate_query)<br>
+                            └─> base.py (KG查询)
+                </div>
+
+                <div class="term-box">
+                    <h3>📚 术语解释</h3>
+                    <div class="term-item"><strong>查询日志 (Query Log)</strong>用户一系列查询的记录，包含主题实体和查询关系。</div>
+                    <div class="term-item"><strong>主题MID (Topic MID)</strong>查询的主题实体标识符。</div>
+                    <div class="term-item"><strong>重用率 (Reuse)</strong>重复查询占总查询的比例。</div>
+                </div>
+
+                <div class="summary">
+                    <strong>大白话总结：</strong>user.py负责生成"假"的用户查询。它根据知识图谱中的实体，随机生成一些问题，作为测试摘要算法的输入。生成的查询会模拟真实用户的行为模式。
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
