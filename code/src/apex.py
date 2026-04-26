@@ -204,17 +204,33 @@ def construct_complete(KG, K, index_list):
             P.add_triple(triple)
     return P
 
-
+"""
+@param KG: 知识图谱
+@param K: 目标数量
+@param query_log: 相当于所有的查询请求
+@param gamma: 时间衰减系数
+@param diameter:
+@param alpha:
+@param query_num_per_test:
+"""
 def APEX_N(KG, K, query_log, query_num_per_test=1, gamma=GAMMA, diameter = 1, alpha=0.3):
     print('Running APEX-N')
+    # 每次更新摘要图所花费的时间
     update_time_list = []
+    # 每次测试得到的平均 F1 分数
     acc_list = []
+    # 时间为0
     t = 0
+    # 查询请求的总量
     num_queries_total = len(query_log)
+    # 存储不同扩散步数对应的稀疏热传播矩阵
     csr_indirect_matrices = {}
+    # 生成n*n的单位矩阵：n是图谱的实体数。然后这个list我个人感觉可以理解为一个三维的坐标系，每层一个矩阵。
     csr_indirect_matrices[0] = sp.eye(KG.number_of_entities())
     print('calculating heat matrices (one-time computing)')
+    # 一个随机的扩散层数。
     for i in range(diameter):
+        # 最多有diameter层
         csr_indirect_matrices[i+1] = alpha * KG.csr_matrix_indirect_heat() * csr_indirect_matrices[i]
     # initialize heat
 
@@ -289,10 +305,10 @@ def APEX_N(KG, K, query_log, query_num_per_test=1, gamma=GAMMA, diameter = 1, al
         
         acc_list.append(avg_F1)
         t += 1     
-
+    # 计算平均值
     logging.info('\t  Ave Time on Each Training Log: {:.2f} seconds'.format(np.mean(update_time_list)))
     logging.info('\t  Ave Ave F1 on Each Training Log: {:.2f}'.format(np.mean(acc_list)))
-
+    # 返回评分数组和更新时间数组
     return acc_list, update_time_list
 
 

@@ -180,7 +180,7 @@ class KnowledgeGraph(object):
                 self.entities_to_relation_[e1][e2] = set()
             self.entities_to_relation_[e1][e2].add(r)
 
-
+    # 实体转化为id
     def entity_id(self, entity):
         """
         :param entity: str label
@@ -235,12 +235,12 @@ class KnowledgeGraph(object):
 
     def calc_csr_matrix_indirect(self):
         return self.csr_matrix() + self.csr_matrix_T()
-
+    #  构建矩阵，外部算法调用的是这个
     def csr_matrix_indirect_heat(self):
         if self.csr_matrix_indirect_heat_ is None:
             self.csr_matrix_indirect_heat_ = self.calc_csr_matrix_indirect_heat()
         return self.csr_matrix_indirect_heat_
-
+    # 借助这个方法构建矩阵
     def calc_csr_matrix_indirect_heat(self):
         """
         :return A: scipy CSR column-stochastic transition matrix
@@ -250,22 +250,87 @@ class KnowledgeGraph(object):
         for e1 in self.triples_:
             for r in self.triples_[e1]:
                 for e2 in self.triples_[e1][r]:
+                    """
+                    每经历一个三元组就会像下面这样添加进去
+                    这里面的entity_id其实就是实体被添加到图谱中的编号，从0开始编号的
+                    假如添加了A喜欢B，B喜欢C，C喜欢D。这三个三元组。会有四个实体添加进去，编号分别是0123。
+                    
+                    分别看一下每次循环的效果
+                    row「0，1」
+                    col「0，1」
+                    data「1，1」
+                    
+                    row「0，1，1，2」
+                    col「0，1，1，2」
+                    data「1，1，1，1」
+                    
+                    row「0，1，1，2, 2, 3」
+                    col「0，1，1，2, 2, 3」
+                    data「1，1，1，1, 1, 1」
+                    """
                     row.append(self.entity_id(e1))
                     col.append(self.entity_id(e1))
                     data.append(1)
                     row.append(self.entity_id(e2))
                     col.append(self.entity_id(e2))
                     data.append(1)
+        # 这个是实体数,以上面为例就是4
         n = self.number_of_entities()
+        """
+        np.array是list转数组。csr_matrix接受的参数是数组
+        csr_matrix函数产生的结果是一种“只存非零元素”的矩阵表示方式：只存非0值和这个值的位置。
+        csr_matrix函数的作用是把 (row[i], col[i]) 位置赋值为 data[i]
+        row  = [0,1,1,2,2,3]
+        col  = [0,1,1,2,2,3]
+        data = [1,1,1,1,1,1]
+        看作
+        （row，col） = {[0,0], [1,1][1,1],[2,2][2,2],[3,3]}
+        会得到一个矩阵是
+        1 0 0 0
+        0 2 0 0
+        0 0 2 0 
+        0 0 0 1
+        
+        假如再添加两个三元组分别是D喜欢B,E喜欢D，
+        那么row，col，data重新理一下分别是
+        [0,1,1,2,2,3,4,2,5,4]
+        [0,1,1,2,2,3,4,2,5,4]
+        [1,1,1,1,1,1,1,1,1,1]
+        row, col = [00][11][11][22][22][33][33][44][22][55][44]
+        矩阵就是
+        1 0 0 0 0
+        0 3 0 0 0
+        0 0 2 0 0
+        0 0 0 2 0
+        0 0 0 0 1
+        可以理解一下就是，横坐标你可以理解为某个元素，然后这一列中有数字的那里是几就说明有几个实体和他相关，A与B相关1，B与A，C相关3，以此类推
+        相当于下图
+        A B C D E
+        1 0 0 0 0
+        0 3 0 0 0
+        0 0 2 0 0
+        0 0 0 2 0
+        0 0 0 0 1
+        综上，下面计算的这个D值 = csr_matrix( (np.array(data), (np.array(row), np.array(col))), shape=(n,n)表示每个实体在知识图谱三元组中的出现频次，也可以说是参与到了多少对关系中
+        """
         D = csr_matrix(
                 (np.array(data), (np.array(row), np.array(col))),
                 shape=(n,n))
+        # 得到 D⁻¹
         D1 = D.copy().astype(float)
         for i in range(n):
             va = D[i, i]
             if va != 0:
                 D1[i, i] = 1/D[i, i]
-
+        """
+        得到的D1，用上面的例子就是
+        1   0   0   0   0
+        0 1/3  0   0   0
+        0   0 1/2  0   0
+        0   0   0 1/2  0
+        0   0   0   0   1
+        我感觉是把出现的频率换成了一个比重一样的东西
+        """
         return self.csr_matrix_indirect().astype(float) * D1
 
     def transition_matrix(self):

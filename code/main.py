@@ -66,16 +66,18 @@ def answer_queries_in_log(KG, K, query_log, summary_methods,
     :param KG: 知识图谱
     :param K: 摘要大小限制
     :param query_log: 查询日志
-    :param summary_methods: 使用的方法列表
+    :param summary_methods: 使用的算法列表
     """
-
+    # 这里主要是两种算法都使用，可以有个对比
     for summary_method in summary_methods:
         logging.info('\t---使用 {} 进行摘要---'.format(summary_method.name()))
-
+        # 前面说封装的差就在这里，已知只有两种，既然想扩展算法，预留了遍历，那么传进来的评估的两套数组就也不改写死这个数量。
         if summary_method.name_ == 'APEX-N':
+            # 我觉得需要进去算法里面看看
             acc_list, update_time_list = APEX_N(KG, K, query_log, query_num_per_test, gamma=gamma)
             acc_list_apex_n += acc_list
             update_time_apex_n += update_time_list
+        # 这部分算法我再抽时间看吧，今天看的是上面那个算法。
         if summary_method.name_ == 'APEX':
             acc_list, update_time_list = APEX(KG, K, query_log, query_num_per_test, gamma=gamma)
             acc_list_apex += acc_list
@@ -155,21 +157,30 @@ def main():
     if (args.save_queries is True):
         print('警告：将覆盖已有文件，是否继续？')
         pdb.set_trace()
-
+    """
+    这里开始就是把数据里的三元组转换为程序中的知识图谱的过程
+    这个KG就是知识图谱。然后根据数据源不同分出来是那个子类，我觉得看一个子类就够了，我看的是Meta的
+    """
     # 获取知识图谱
     KG = KG_MAPPING[args.kg]
-    # 从输入参数中提取摘要方法
+    # 从输入参数中提取摘要方法,无需理会，只需要知道是作者提供的两种对比的摘要算法就行
     summary_methods = [METHODS[name] for name in args.method]
     logging.info('正在加载 {}'.format(KG.name()))
     # 加载知识图谱
     KG.load()
     logging.info('加载完成 {}'.format(KG.name()))
 
-    # 计算摘要大小 K： 三元组数量乘以百分比然后取整
+    # 计算目标三元组大小，应该也可以说是摘要大小K： 三元组数量乘以百分比然后取整
     K = int(args.percent_triples * KG.number_of_triples())
     logging.info('K = {}'.format(K))
 
-    # 模拟用户（默认是0到2的随机数）
+    """
+    一个用户可能进行了200次查询
+    下面这个部分代码就是模拟一个用户查询这两百次的过程。只不过这200次的查询被存放在了MetaQA之类的那些东西下面。需要打开那些文件读取进来
+    主要是模拟上述过程
+    然后把这两百次查询记录喂给两种算法
+    这两种算法会分别输出自己的F1分数和平均更新时间
+    """
     for user in range(args.start_user, args.start_user + args.n_users):
         logging.info('---模拟用户 {}---'.format(user))
         # 更新图的用户
@@ -190,11 +201,33 @@ def main():
             query_log = []
             # 查询数量里取随机数
             for i in range(args.n_queries):
-                # 从final目录里面找到q对应的json并且添加日志
+                """
+                从final目录里面找到请求对应的json并且添加日志
+                {
+                  "QuestionId": "0",
+                  "Parse": {
+                    "TopicEntityMid": "Stevan Riley",
+                    "TopicEntityName": "Stevan Riley",
+                    "InferentialChain": [
+                      "writer_to_movie"
+                    ],
+                    "Constraints": [],
+                    "Answers": [
+                      {
+                        "AnswerType": "Entity",
+                        "AnswerArgument": "Blue Blood",
+                        "EntityName": "Blue Blood"
+                      }
+                    ]
+                  }
+                }
+                """
                 with open(KG.query_dir() + "q" + str(i) + ".json", "r") as f:
                     # 添加查询日志（可以不看）
                     query_log.append(json.load(f))
-
+            #{'QuestionId': '0', 'Parse': {'TopicEntityMid': 'Stevan Riley', 'TopicEntityName': 'Stevan Riley', 'InferentialChain': ['writer_to_movie'], 'Constraints': [], 'Answers': [{'AnswerType': 'Entity', 'AnswerArgument': 'Blue Blood', 'EntityName': 'Blue Blood'}]}}
+            # 取消注释可以验证上面这行注释里的日志格式。其实就是吧上面那个json记录下来了。然后这个数组里面其实就是所有的查询的问题。我觉得可以取消注释看看
+            # print(query_log)
             logging.info('---已加载 {} 条查询日志---'.format(len(query_log)))
 
         else:
@@ -217,13 +250,17 @@ def main():
                     whether_save=args.save_queries)
 
                 logging.info('---生成了 {} 条查询日志---'.format(len(query_log)))
-        # 保存查询的话就把日志输出出来
+        # 保存查询的话就把日志输出出来（我觉得不需要看这部分代码）
         if args.save_queries:
             logging.info('---正在保存查询---')
             for i in range(len(query_log)):
                 with open(KG.query_dir() + "q" + str(i) + ".json", "w") as outfile:
                     json.dump(query_log[i], outfile)
-
+        """
+        下面这个方法是真的在执行查询，还会评估。然后把结果输入给两套数组，分别表示各自算法的F1评分和平均时间
+        图谱，摘要大小，查询内容，摘要方法，两套评估的数组。还有俩带默认参数值的到方法声明哪里看吧
+        有一说一。方法封装的不好，算法还没细看呢。方法封装的太差了。
+        """
         answer_queries_in_log(
             KG, K, query_log, summary_methods,
             acc_list_apex_n, acc_list_apex,
