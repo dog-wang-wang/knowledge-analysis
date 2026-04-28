@@ -227,14 +227,53 @@ def APEX_N(KG, K, query_log, query_num_per_test=1, gamma=GAMMA, diameter = 1, al
     csr_indirect_matrices = {}
     # 生成n*n的单位矩阵：n是图谱的实体数。然后这个list我个人感觉可以理解为一个三维的坐标系，每层一个矩阵。
     csr_indirect_matrices[0] = sp.eye(KG.number_of_entities())
+    """
+    单位矩阵如下
+    1 0 0 0 0
+    0 1 0 0 0
+    0 0 1 0 0
+    0 0 0 1 0
+    0 0 0 0 1
+    """
     print('calculating heat matrices (one-time computing)')
     # 一个随机的扩散层数。
     for i in range(diameter):
         # 最多有diameter层
+        """
+        就用这个函数里的例子 csr_matrix_indirect_heat()
+        KG.csr_matrix_indirect_heat()如下
+        0   1/2   0     0     0
+        1   0     1/3   0     0
+        0   1/2   0     2/3   0
+        0   0     2/3   0     1
+        0   0     0     1/3   0
+        csr_indirect_matrices[]
+        """
         csr_indirect_matrices[i+1] = alpha * KG.csr_matrix_indirect_heat() * csr_indirect_matrices[i]
     # initialize heat
-
+        """
+        人工走一下这个遍历过程吧，假设就三层，alpha 是 0.3不好算，用 0.5吧
+        第一层
+        1 0 0 0 0        0   1/2   0     0     0                                 0   1/4  0    0  0                                           1/2   0     1/6    0     0
+        0 1 0 0 0        1   0     1/3   0     0                                 1/2  0   1/6  0  0                                           0     2/3   0      2/9   0
+        0 0 1 0 0   ->   0   1/2   0     2/3   0 与第一层相乘还要乘 alpha得到第二层   0   1/4  0    0  0 -> 这个再与 alpha 和那个矩阵相乘得到第三层     1/2   0     11/18  0     2/3  
+        0 0 0 1 0        0   0     2/3   0     1                                 0    0   2/6  0  1/2                                         0     1/3   0      4/9   0
+        0 0 0 0 1        0   0     0     1/3   0                                 0   0    0    1/6 0                                          0     0     2/9    0     1/3  
+        再理一下这个 csr 的数组,简称他 csr，那个图谱的简称 M 吧
+        csr0 = I
+        csr1 = a M
+        csr2 = a^2 M^2
+        csr3 = a^3 M^3。。。以此类推下去有递推公式：csr[k] = a^k M^k   就是矩阵的乘方然后乘了个系数
+        
+        现在理解一下这个矩阵中每一层的含义
+        A^k 的第 j 列 = 从第 j 个点出发，走 k 步能到各个点的“所有路径的累计结果”
+        怎么理解这个过程：从我来看，我还是看最初的A 实体那一列到 B 的概率是1，到其他的都是 0
+        然后乘方之后还是以 A 为例。他的计算过程理解为A 走一步到实体 B 的概率 × 实体B再走一步到其他实体的概率。含义其实就是从列代表的实体为起点，走 K 步到行代表的实体为终点的概率
+        """
     print('heat matrices calculated')
+    """
+    综上所述，csr 这个数组第 K 层的含义就是从列代表的实体为起点，走 K 步到行代表的实体为终点的概率
+    """
     initial_heat = np.zeros(KG.number_of_entities())
     index_list = []
     first_q = query_log[0]

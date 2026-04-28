@@ -395,6 +395,12 @@ class KnowledgeGraph(object):
         找到C，相关B的概率是1/3，相关D的概率是2/3
         找到D，相关C的概率是2/3，相关E的概率是1/3
         找到E，相关D的概率是1
+        
+        
+        说人话是：
+        假如我找到了A那么我找的下一个实体一定是B
+        我找到了B那么我有二分之一找A，二分之一找C
+        我找C那么有三分之一的机会找B三分之二的机会找D。。。
         """
         return self.csr_matrix_indirect().astype(float) * D1
 
