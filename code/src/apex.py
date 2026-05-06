@@ -54,25 +54,58 @@ class Summary(KnowledgeGraph):
 
 
 def Heat_Diffuse(heat, KG, query, d, csr_indirect_matrices): # adj matrix and heat
+    # 全零向量，后面有用
     q = np.zeros(KG.number_of_entities())
+    # 从查询参数中读取 parse 字段，这个查询参数就一个字典类型的数据，（对应 java 中的 hashmap。js 中我记得好像也叫字典，其实就是键值对集合）
     parse = query['Parse']
+    # 从字典中取出实体（我觉得你打开这个文件看看可能更好理解/Users/zjh/code/python/APEX/PKG_EXP/MetaQA/queries/user0/final/q0.json）忽略前面的一堆，我复制的绝对路径，主要从 PKG 那个路径那里找就知道了
     topic_mid = parse['TopicEntityMid']
+    # 从图谱中定位到这个实体的 id（代码写的太差了这里）
     topic_eid = KG.entity_id(parse['TopicEntityMid'])
+    # 提取关系
     relation = parse['InferentialChain'][0]
+    # 从图谱中取出结果——实体与关系对应的另外那个实体
     answers = KG[topic_mid][relation]
+    # 用来存储答案实体对应的整数 ID，也可以理解为请求参数中实体的 id
     q[topic_eid] += 1
+    # 答案的列 id 的集合
     answers_rid = np.zeros(len(answers), dtype = int)
+    # 遍历答案集合
     for i, item in enumerate(answers):
+        # 根据答案 id 修改对应的答案列 id 的值
         answers_rid[i] = KG.entity_id(item)
+        # 这里是把答案的概率平均分，然后分配到实体的位置上，可以说是实体参加到每段关系的概率又赋值上去了
         q[answers_rid[i]] += 1/len(answers)
+        """
+        把 q[i]理解为被影响度（当成水来理解吧，水量）
+        举个例子吧。
+        我把倒水当做一次查询（理论上查询只涉及到两个实体，那就是两杯水）。把关系比作一个管道。
+        有 A->B,A->C这两种关系，我把水倒入 A，满了才会进入 B，但是也可能流入 C。
+        不在人为干预的情况下这两杯水会有一杯完全留在 A 里面，剩下 B，C 各留半杯水
+        此时理解下来就是 q[0] = 1
+        q[1] = 1/2
+        q[2] = 1/2        
+        """
 
 
-    # diffuse through edges
+    # 这里是图的扩散，首先复制 q 矩阵
     r = q.copy()
+    """
+    之前有说过 csrk = a^k M^k,忽略那个常数可以看作 csrk=M^k
+    q[0] +=1
+    q[1] +=1
+    q[2] +=1
+    那么下面这个q的计算 就相当于 q =M^k * q
+    这个 csrk 之前也说过每个元素相当于查询时跳 k 步查询到某个元素的概率
+    再理解一下，此时用乘法就相当于原先平均非配的概率改为了按比例分配
+    所以此时的q 的含义就是某个实体最后接到了多少水（在本次查询中被影响到了多少）
+    r 是走一步的影响+走两步的影响+走三步的影响。。。
+    """
     for i in range(d):
         q = csr_indirect_matrices[i+1] * q
         r += q
     changed_index_list = []
+    # 这里我不太理解，他抛弃了一些数，像是被影响量低的实体直接被他抛弃了，不太确定，先这样吧
     for i in range(len(r)):
         if r[i] != 0 and r[i] > 1e-3:
             changed_index_list.append(i)
@@ -274,14 +307,29 @@ def APEX_N(KG, K, query_log, query_num_per_test=1, gamma=GAMMA, diameter = 1, al
     """
     综上所述，csr 这个数组第 K 层的含义就是从列代表的实体为起点，走 K 步到行代表的实体为终点的概率
     """
+
+    """
+    这里创建一个内部全部为 0 的向量
+    """
     initial_heat = np.zeros(KG.number_of_entities())
     index_list = []
+    # 这里是查询参数
     first_q = query_log[0]
+    # 这里把之前的向量，图谱，层数，概率都穿进去，（这个函数写了注释，建议看看）
+    # heat 为影响力矩阵（这个需要从函数里面理解这个词的意思）。_为受影响较大的实体
     heat, _ = Heat_Diffuse(initial_heat, KG, first_q, diameter, csr_indirect_matrices)
+    # 从大到小排序
     sorted_heat = np.sort(heat)[::-1]
+    # 从大到小排序后，当前元素在原 list 中的位置
+    """
+    举例说明一下：【3，5，2，6】
+    排序：【2，3，5，6】
+    args：【2，0，1，3】
+    """
     sorted_args = np.argsort(heat)[::-1]
     i = 0
     while sorted_heat[i] > 0:
+        # 把 args 添加到 index_list里面，我觉得不需要纠结这个 while 循环的操作在干什么
         index_list.append(sorted_args[i])
         i += 1
     P = construct_naive(KG, K, topic_eids = index_list)
