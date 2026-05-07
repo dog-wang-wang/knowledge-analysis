@@ -38,8 +38,8 @@ def query_metrics(S, query):
 
 def total_query_log_metrics(S, query_log):
     """
-    :param S: Summary
-    :param query_log: list of queries
+    :param S: Summary 子图
+    :param query_log: list of queries 查询记录
     :return f1_score, precision, recall: computed over entire log
     """
     tp = fp = fn = 0

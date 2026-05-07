@@ -201,14 +201,26 @@ def incremental_sort(index_list, changed_index_list, H_old, H_new):   # changed_
 
     
 
-
+"""
+看到这里可能忘了一些参数含义了，
+KG 就是图谱全图
+K 就是目标拿到的实体数量
+topic_eids就是与本次查询的相关的实体构成的一个数组
+"""
 def construct_naive(KG, K, topic_eids):
+    # 这里说白了其实就是把 KG 转为子类 Summary
     P = Summary(KG)
+    # 存储实体用户的集合
     topic_mids = []
-    # turn eid into mid
+    # 从图谱中根据 id 提取 entity 本身
     for topic_eid in topic_eids:
         topic_mids.append(KG.id_entity_[topic_eid])
     i = 0
+    """
+    这一步其实是在按照之前影响力大小的顺序构建一个子图，
+    这个子图的三元组数量不超过 K
+    如果之前影响力数组的长度小于 K，那么不足 K 的三元组的部分会添加一些随机的三元组
+    """
     while P.number_of_triples() < K:
         P.add_entity(topic_mids[i])
         i += 1
@@ -318,7 +330,7 @@ def APEX_N(KG, K, query_log, query_num_per_test=1, gamma=GAMMA, diameter = 1, al
     # 这里把之前的向量，图谱，层数，概率都穿进去，（这个函数写了注释，建议看看）
     # heat 为影响力矩阵（这个需要从函数里面理解这个词的意思）。_为受影响较大的实体
     heat, _ = Heat_Diffuse(initial_heat, KG, first_q, diameter, csr_indirect_matrices)
-    # 从大到小排序
+    # 从大到小排序（我理解上就是给本次查询相关的元素按照相关度进行排序）
     sorted_heat = np.sort(heat)[::-1]
     # 从大到小排序后，当前元素在原 list 中的位置
     """
@@ -328,14 +340,17 @@ def APEX_N(KG, K, query_log, query_num_per_test=1, gamma=GAMMA, diameter = 1, al
     """
     sorted_args = np.argsort(heat)[::-1]
     i = 0
+    # 一个很差的写法
     while sorted_heat[i] > 0:
         # 把 args 添加到 index_list里面，我觉得不需要纠结这个 while 循环的操作在干什么
         index_list.append(sorted_args[i])
         i += 1
+    # 这里是在构建子图
     P = construct_naive(KG, K, topic_eids = index_list)
-    # test for initial graph
+    # 没用不用看
     if DETAILED_LOGGING:
         logging.info('Initial Test')
+    # 这里开始计算指标
     total_F1, total_precision, total_recall = total_query_log_metrics(P, query_log[1: 1+query_num_per_test])
     if DETAILED_LOGGING:
         logging.info('\t  Total F1/precision/recall')
